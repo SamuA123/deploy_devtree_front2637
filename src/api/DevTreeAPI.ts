@@ -2,6 +2,7 @@ import { isAxiosError } from 'axios'
 import api from '../config/axios'
 import { User, UserHandle } from '../types'
 
+// Obtener el perfil del usuario
 export async function getUser() {
     try {
         const { data } = await api<User>('/user')
@@ -13,6 +14,7 @@ export async function getUser() {
     }
 }
 
+// Actualizar el perfil
 export async function updateProfile(formData: User) {
     try {
         const { data } = await api.patch<string>('/user', formData)
@@ -24,6 +26,7 @@ export async function updateProfile(formData: User) {
     }
 }
 
+// Subir una imagen de perfil
 export async function uploadImage(file: File) {
     let formData = new FormData()
     formData.append('file', file)
@@ -37,6 +40,7 @@ export async function uploadImage(file: File) {
     }
 }
 
+// Obtener un usuario por handle
 export async function getUserByHandle(handle: string) {
     try {
         const url = `/${handle}`
@@ -49,12 +53,37 @@ export async function getUserByHandle(handle: string) {
     }
 }
 
+// Buscar un usuario por handle
 export async function searchByHandle(handle: string) {
     try {
         const { data } = await api.post<string>('/search', {handle})
         return data
     } catch (error) {
         if (isAxiosError (error) && error.response) {
+            throw new Error(error.response.data.error)
+        }
+    }
+}
+
+// Incrementar el contador de visitas del perfil
+export async function incrementProfileVisit(userId: string) {
+    try {
+        const { data } = await api.post<{ count: number }>(`/api/profile/${userId}/visit`)
+        return data.count
+    } catch (error) {
+        if (isAxiosError(error) && error.response) {
+            throw new Error(error.response.data.error)
+        }
+    }
+}
+
+// Obtener el contador de visitas del perfil
+export async function getProfileVisitCount(userId: string) {
+    try {
+        const { data } = await api.get<{ count: number }>(`/api/profile/${userId}/visit`)
+        return data.count
+    } catch (error) {
+        if (isAxiosError(error) && error.response) {
             throw new Error(error.response.data.error)
         }
     }

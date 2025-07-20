@@ -1,4 +1,4 @@
-import { BookmarkSquareIcon, UserIcon } from '@heroicons/react/20/solid'
+import { BookmarkSquareIcon, UserIcon } from '@heroicons/react/24/outline'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 
 const tabs = [
@@ -19,19 +19,20 @@ export default function NavigationTabs() {
     }
 
     return (
-        <div className='mb-5'>
+        <div className='mb-8'>
+            {/* Versión móvil */}
             <div className="sm:hidden">
                 <label htmlFor="tabs" className="sr-only">
-                    Select a tab
+                    Seleccionar pestaña
                 </label>
                 <select
                     id="tabs"
                     name="tabs"
-                    className="block w-full rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                    onChange={ handleChange }
+                    className="block w-full rounded-xl border-gray-200 bg-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-gray-700 font-medium"
+                    onChange={handleChange}
                 >
                     {tabs.map((tab) => (
-                        <option 
+                        <option
                             value={tab.href}
                             key={tab.name}
                         >{tab.name}</option>
@@ -39,30 +40,39 @@ export default function NavigationTabs() {
                 </select>
             </div>
 
+            {/* Versión desktop */}
             <div className="hidden sm:block">
-                <div className="border-b border-gray-200">
-                    <nav className="-mb-px flex space-x-8" aria-label="Tabs">
-                        {tabs.map((tab) => (
-                            <Link
-                                key={tab.name}
-                                to={tab.href}
-                                className={classNames(
-                                    location.pathname === tab.href
-                                        ? 'border-blue-500 text-blue-500'
-                                        : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700',
-                                    'group inline-flex items-center border-b-2 py-4 px-1 text-xl'
-                                )}
-                            >
-                                <tab.icon
+                <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-2">
+                    <nav className="flex space-x-2" aria-label="Tabs">
+                        {tabs.map((tab) => {
+                            const isActive = location.pathname === tab.href
+                            return (
+                                <Link
+                                    key={tab.name}
+                                    to={tab.href}
                                     className={classNames(
-                                        location.pathname === tab.href ? 'text-blue-500' : 'text-gray-400 group-hover:text-gray-500',
-                                        '-ml-0.5 mr-2 h-5 w-5'
+                                        isActive
+                                            ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg'
+                                            : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50',
+                                        'group flex items-center px-6 py-3 rounded-xl text-lg font-semibold transition-all duration-200 relative overflow-hidden'
                                     )}
-                                    aria-hidden="true"
-                                />
-                                <span>{tab.name}</span>
-                            </Link>
-                        ))}
+                                >
+                                    {/* Efecto de brillo para la pestaña activa */}
+                                    {isActive && (
+                                        <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
+                                    )}
+                                    
+                                    <tab.icon
+                                        className={classNames(
+                                            isActive ? 'text-white' : 'text-gray-500 group-hover:text-gray-700',
+                                            'mr-3 h-6 w-6 transition-colors duration-200'
+                                        )}
+                                        aria-hidden="true"
+                                    />
+                                    <span className="relative z-10">{tab.name}</span>
+                                </Link>
+                            )
+                        })}
                     </nav>
                 </div>
             </div>
